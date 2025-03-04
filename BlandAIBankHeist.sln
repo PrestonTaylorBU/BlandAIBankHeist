@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35707.178
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlandAIBankHeist.Web", "src\BlandAIBankHeist.Web\BlandAIBankHeist.Web.csproj", "{93BAF993-3DC4-4190-9019-7D09FDB3740E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlandAIBankHeist.Web.UnitTests", "test\BlandAIBankHeist.Web.UnitTests\BlandAIBankHeist.Web.UnitTests.csproj", "{BB98A718-C689-4A26-B775-40AC87F13042}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{93BAF993-3DC4-4190-9019-7D09FDB3740E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93BAF993-3DC4-4190-9019-7D09FDB3740E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93BAF993-3DC4-4190-9019-7D09FDB3740E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93BAF993-3DC4-4190-9019-7D09FDB3740E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB98A718-C689-4A26-B775-40AC87F13042}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB98A718-C689-4A26-B775-40AC87F13042}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB98A718-C689-4A26-B775-40AC87F13042}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB98A718-C689-4A26-B775-40AC87F13042}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
