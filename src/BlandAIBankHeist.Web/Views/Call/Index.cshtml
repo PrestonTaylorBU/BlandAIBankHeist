@@ -1,7 +1,25 @@
-﻿@{
+﻿@model CreateCallDTO
+@{
     ViewData["Title"] = "Bank Heist Game";
 }
 
 <section class="text-center">
     <h1>Start your Bank Heist call session!</h1>
+
+    <form asp-action="Index">
+        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+        <div class="input-group">
+            <input asp-for="PhoneNumberToCall" class="form-control" autocomplete="on" aria-required="true" type="tel" pattern="\+[0-9]{10,15}" placeholder="Phone Number (With Country Code)" required />
+
+            <input type="submit" value="Call" class="btn btn-outline-primary rounded-end" />
+        </div>
+
+        <span asp-validation-for="PhoneNumberToCall" class="text-danger"></span>
+
+        @if (ViewData.ContainsKey("SuccessMessage"))
+        {
+            <span class="text-success">@ViewData["SuccessMessage"]</span>
+        }
+    </form>
 </section>
