@@ -1,14 +1,16 @@
 using System.Diagnostics;
 using BlandAIBankHeist.Web.Models;
+using BlandAIBankHeist.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlandAIBankHeist.Web.Controllers;
 
 public sealed class CallController : Controller
 {
-    public CallController(ILogger<CallController> logger)
+    public CallController(ILogger<CallController> logger, IBlandApiService blandApiService)
     {
         _logger = logger;
+        _blandApiService = blandApiService;
     }
 
     public IActionResult Index()
@@ -17,7 +19,7 @@ public sealed class CallController : Controller
     }
 
     [HttpPost]
-    public IActionResult Index([Bind("PhoneNumberToCall")]CreateCallDTO createCallDto)
+    public async Task<IActionResult> Index([Bind("PhoneNumberToCall")]CreateCallDTO createCallDto)
     {
         if (!ModelState.IsValid)
         {
@@ -25,9 +27,21 @@ public sealed class CallController : Controller
             return View(createCallDto);
         }
 
-        _logger.LogInformation("User created a call with a valid phone number.");
-        ViewData.Add("SuccessMessage", "Your call has been added to the queue! Please wait for the call!");
-        return View();
+        try
+        {
+            var callId = await _blandApiService.TryToQueueCallAsync(createCallDto.PhoneNumberToCall);
+            _logger.LogInformation("User created a call with a valid phone number with call ID {CallId}.", callId);
+            ViewData.Add("SuccessMessage", "Your call has been added to the queue! Please wait for the call!");
+            return View();
+        }
+        catch (InvalidOperationException ex)
+        {
+            _logger.LogError("Failed to create call with exception message {Message}", ex.Message);
+
+            // TODO: User friendly error messages
+            ViewData.Add("ErrorMessage", "Failed to add call to the queue! Please try again soon.");
+            return View();
+        }
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
@@ -37,4 +51,5 @@ public sealed class CallController : Controller
     }
 
     private readonly ILogger<CallController> _logger;
+    private readonly IBlandApiService _blandApiService;
 }

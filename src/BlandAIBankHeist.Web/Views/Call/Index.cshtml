@@ -21,5 +21,10 @@
         {
             <span class="text-success">@ViewData["SuccessMessage"]</span>
         }
+
+        @if (ViewData.ContainsKey("ErrorMessage"))
+        {
+            <span class="text-danger">@ViewData["ErrorMessage"]</span>
+        }
     </form>
 </section>
