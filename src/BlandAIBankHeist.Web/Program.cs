@@ -1,4 +1,5 @@
 using BlandAIBankHeist.Web.Installers;
+using BlandAIBankHeist.Web.Options;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,8 @@ builder.Host.UseSerilogWithConfiguration(builder.Configuration);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddAntiforgery();
+
+builder.Services.Configure<BlandApiOptions>(builder.Configuration.GetSection(BlandApiOptions.Section));
 
 var app = builder.Build();
 
