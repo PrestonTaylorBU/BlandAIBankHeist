@@ -12,6 +12,8 @@ builder.Services.AddAntiforgery();
 
 builder.Services.Configure<BlandApiOptions>(builder.Configuration.GetSection(BlandApiOptions.Section));
 
+builder.Services.AddBlandApiServices();
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
