@@ -19,7 +19,8 @@ public class BlandApiService : IBlandApiService
     {
         var client = CreateAuthorizedHttpClientForBlandApi();
 
-        var response = await client.PostAsJsonAsync("/v1/calls", new QueueCallModel { PhoneNumber = phoneNumber, Task = "Greet User like a Bank Teller." });
+        var response = await client.PostAsJsonAsync("/v1/calls", new QueueCallModel { PhoneNumber = phoneNumber,
+            PathwayId = _apiOptions.CurrentValue.BankHeistPathwayId });
         if (!response.IsSuccessStatusCode)
         {
             _logger.LogError("Failed to queue a call with the BlandAI API with the code {Code} and reponse {Response}.",
