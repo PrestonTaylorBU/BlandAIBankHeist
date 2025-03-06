@@ -7,6 +7,6 @@ public sealed class QueueCallModel
     [JsonPropertyName("phone_number")]
     public required string PhoneNumber { get; init; }
 
-    [JsonPropertyName("task")]
-    public required string Task { get; init; }
+    [JsonPropertyName("pathway_id")]
+    public required string PathwayId { get; init; }
 }

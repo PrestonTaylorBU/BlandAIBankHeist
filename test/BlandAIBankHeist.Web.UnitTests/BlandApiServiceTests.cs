@@ -72,7 +72,7 @@ public sealed class BlandApiServiceTests
     {
         // Arrange
         _httpMessageHandler.Expect(_fakeCallUrl)
-            .WithJsonContent(new QueueCallModel { PhoneNumber = _expectedPhoneNumber, Task = "Greet User like a Bank Teller." })
+            .WithJsonContent(new QueueCallModel { PhoneNumber = _expectedPhoneNumber, PathwayId = _fakePathwayId })
             .Respond("application/json", $"{{\"status\": \"success\", \"call_id\": \"\"}}");
 
         // Act
@@ -104,8 +104,9 @@ public sealed class BlandApiServiceTests
     private readonly MockHttpMessageHandler _httpMessageHandler = new();
 
     private const string _fakeApiUrl = "https://www.FakeApiUrl.com";
+    private const string _fakePathwayId = nameof(_fakePathwayId);
     private const string _expectedPhoneNumber = nameof(_expectedPhoneNumber);
 
-    private readonly BlandApiOptions _fakeBlandApiOptions = new() { ApiUrl = _fakeApiUrl, ApiKey = "FakeApiKey" };
+    private readonly BlandApiOptions _fakeBlandApiOptions = new() { ApiUrl = _fakeApiUrl, ApiKey = "FakeApiKey", BankHeistPathwayId = _fakePathwayId };
     private readonly string _fakeCallUrl = $"{_fakeApiUrl}/v1/calls";
 }
