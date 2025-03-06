@@ -52,7 +52,7 @@ public sealed class BlandApiServiceTests
     }
 
     [Fact]
-    public async Task TryToQueueCallAsync_ReturnsCallId_WhenResponseSuccessful_AndRespondsWithValidBlandAPIResponse()
+    public async Task TryToQueueCallAsync_ReturnsExpectedCallId_WhenResponseSuccessful_AndRespondsWithValidBlandAPIResponse()
     {
         // Arrange
         const string expectedCallId = nameof(expectedCallId);
@@ -97,6 +97,83 @@ public sealed class BlandApiServiceTests
         _httpMessageHandler.VerifyNoOutstandingExpectation();
     }
 
+    [Fact]
+    public async Task GetCallDetailsAsync_ReturnsNull_WhenResponseFromApi_HasNonSuccessStatusCode()
+    {
+        // Arrange
+        _httpMessageHandler.When(_fakeCallDetailsUrl)
+            .Respond(HttpStatusCode.NotFound);
+
+        // Act
+        var callDetails = await _sut.GetCallDetailsAsync(_fakeCallId);
+
+        // Assert
+        callDetails.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task GetCallDetailsAsync_ReturnsNull_WhenResponseIsIllFormed()
+    {
+        // Arrange
+        _httpMessageHandler.When(_fakeCallDetailsUrl)
+            .Respond("application/json", "{}");
+
+        // Act
+        var callDetails = await _sut.GetCallDetailsAsync(_fakeCallId);
+
+        // Assert
+        callDetails.Should().BeNull();
+    }
+
+    [Fact]
+    public async Task GetCallDetailsAsync_ReturnsExpectedCallDetails_WhenResponseSuccessful_AndRespondsWithValidBlandAPIResponse()
+    {
+        // Arrange
+        _httpMessageHandler.When(_fakeCallDetailsUrl)
+            .Respond("application/json", $"{{\"call_id\": \"{_fakeCallId}\", \"to\": \"{_expectedPhoneNumber}\"}}");
+
+        // Act
+        var callDetails = await _sut.GetCallDetailsAsync(_fakeCallId);
+
+        // Assert
+        callDetails.Should().NotBeNull();
+
+        callDetails.CallId.Should()
+            .Be(_fakeCallId);
+
+        callDetails.ToPhoneNumber.Should()
+            .Be(_expectedPhoneNumber);
+    }
+
+    [Fact]
+    public async Task GetCallDetailsAsync_UsesExpectedCallId_WhenUsingBlandAPI()
+    {
+        // Arrange
+        _httpMessageHandler.Expect(_fakeCallDetailsUrl)
+            .Respond("application/json", $"{{\"call_id\": \"{_fakeCallId}\", \"to\": \"{_expectedPhoneNumber}\"}}");
+
+        // Act
+        await _sut.GetCallDetailsAsync(_fakeCallId);
+
+        // Assert
+        _httpMessageHandler.VerifyNoOutstandingExpectation();
+    }
+
+    [Fact]
+    public async Task GetCallDetailsAsync_UsesExpectedApiKey_WhenUsingBlandAPI()
+    {
+        // Arrange
+        _httpMessageHandler.Expect(_fakeCallDetailsUrl)
+            .WithHeaders("Authorization", _fakeBlandApiOptions.ApiKey)
+            .Respond("application/json", $"{{\"call_id\": \"{_fakeCallId}\", \"to\": \"{_expectedPhoneNumber}\"}}");
+
+        // Act
+        await _sut.GetCallDetailsAsync(_fakeCallId);
+
+        // Assert
+        _httpMessageHandler.VerifyNoOutstandingExpectation();
+    }
+
     private readonly BlandApiService _sut;
 
     private readonly IOptionsMonitor<BlandApiOptions> _apiOptionsMonitor = Substitute.For<IOptionsMonitor<BlandApiOptions>>();
@@ -105,8 +182,10 @@ public sealed class BlandApiServiceTests
 
     private const string _fakeApiUrl = "https://www.FakeApiUrl.com";
     private const string _fakePathwayId = nameof(_fakePathwayId);
+    private const string _fakeCallId = nameof(_fakeCallId);
     private const string _expectedPhoneNumber = nameof(_expectedPhoneNumber);
 
     private readonly BlandApiOptions _fakeBlandApiOptions = new() { ApiUrl = _fakeApiUrl, ApiKey = "FakeApiKey", BankHeistPathwayId = _fakePathwayId };
     private readonly string _fakeCallUrl = $"{_fakeApiUrl}/v1/calls";
+    private readonly string _fakeCallDetailsUrl = $"{_fakeApiUrl}/v1/calls/{_fakeCallId}";
 }
