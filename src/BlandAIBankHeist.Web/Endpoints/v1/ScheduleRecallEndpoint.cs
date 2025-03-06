@@ -1,4 +1,5 @@
-﻿using BlandAIBankHeist.Web.Options;
+﻿using BlandAIBankHeist.Web.Models;
+using BlandAIBankHeist.Web.Options;
 using BlandAIBankHeist.Web.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -16,11 +17,11 @@ public static class ScheduleRecallEndpoint
     public class ScheduleRecallAPI;
 
     static public async Task<IResult> ScheduleRecall(ILogger<ScheduleRecallAPI> logger, IOptionsMonitor<BlandApiOptions> apiOptions,
-        IBlandApiService blandApiService, [FromBody]string callId)
+        IBlandApiService blandApiService, [FromBody]ScheduleRecallDTO scheduleRecallRequest)
     {
-        logger.LogInformation("Schedule recall requested with call id {CallID}.", callId);
+        logger.LogInformation("Schedule recall requested with call id {CallID}.", scheduleRecallRequest.CallId);
 
-        var callDetails = await blandApiService.GetCallDetailsAsync(callId);
+        var callDetails = await blandApiService.GetCallDetailsAsync(scheduleRecallRequest.CallId);
         if (callDetails is null)
         {
             return Results.BadRequest("Invalid call id provided.");
@@ -35,11 +36,11 @@ public static class ScheduleRecallEndpoint
             {
                 var newCallId = await blandApiService.TryToQueueCallAsync(callDetails.ToPhoneNumber, apiOptions.CurrentValue.BankHeistJobPathwayId,
                     apiOptions.CurrentValue.JobVoice);
-                logger.LogInformation("Successfully scheduled recall with call id {CallID}.", callId);
+                logger.LogInformation("Successfully scheduled recall with call id {CallID}.", scheduleRecallRequest.CallId);
             }
             catch (InvalidOperationException ex)
             {
-                logger.LogError(ex, "Failed to schedule recall with user with call id {CallID}.", callId);
+                logger.LogError(ex, "Failed to schedule recall with user with call id {CallID}.", scheduleRecallRequest.CallId);
             }
         });
 
