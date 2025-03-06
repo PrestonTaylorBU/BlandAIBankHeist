@@ -1,5 +1,6 @@
 using BlandAIBankHeist.Web.Installers;
 using BlandAIBankHeist.Web.Options;
+using BlandAIBankHeist.Web.Endpoints.v1;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,6 +30,8 @@ app.UseAntiforgery();
 app.UseRouting();
 
 app.MapStaticAssets();
+
+app.MapScheduleRecallEndpoint();
 
 app.MapControllerRoute(
     name: "default",
