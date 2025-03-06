@@ -1,15 +1,18 @@
 using System.Diagnostics;
 using BlandAIBankHeist.Web.Models;
+using BlandAIBankHeist.Web.Options;
 using BlandAIBankHeist.Web.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 namespace BlandAIBankHeist.Web.Controllers;
 
 public sealed class CallController : Controller
 {
-    public CallController(ILogger<CallController> logger, IBlandApiService blandApiService)
+    public CallController(ILogger<CallController> logger, IOptionsMonitor<BlandApiOptions> apiOptions, IBlandApiService blandApiService)
     {
         _logger = logger;
+        _apiOptions = apiOptions;
         _blandApiService = blandApiService;
     }
 
@@ -29,7 +32,7 @@ public sealed class CallController : Controller
 
         try
         {
-            var callId = await _blandApiService.TryToQueueCallAsync(createCallDto.PhoneNumberToCall);
+            var callId = await _blandApiService.TryToQueueCallAsync(createCallDto.PhoneNumberToCall, _apiOptions.CurrentValue.BankHeistIntroductionPathwayId);
             _logger.LogInformation("User created a call with a valid phone number with call ID {CallId}.", callId);
             ViewData.Add("SuccessMessage", "Your call has been added to the queue! Please wait for the call!");
             return View();
@@ -51,5 +54,6 @@ public sealed class CallController : Controller
     }
 
     private readonly ILogger<CallController> _logger;
+    private readonly IOptionsMonitor<BlandApiOptions> _apiOptions;
     private readonly IBlandApiService _blandApiService;
 }

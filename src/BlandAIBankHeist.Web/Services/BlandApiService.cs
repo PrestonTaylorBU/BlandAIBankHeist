@@ -15,12 +15,11 @@ public class BlandApiService : IBlandApiService
         _httpClientFactory = httpClientFactory;
     }
 
-    public async Task<string> TryToQueueCallAsync(string phoneNumber)
+    public async Task<string> TryToQueueCallAsync(string phoneNumber, string pathwayId)
     {
         var client = CreateAuthorizedHttpClientForBlandApi();
 
-        var response = await client.PostAsJsonAsync("/v1/calls", new QueueCallModel { PhoneNumber = phoneNumber,
-            PathwayId = _apiOptions.CurrentValue.BankHeistPathwayId });
+        var response = await client.PostAsJsonAsync("/v1/calls", new QueueCallModel { PhoneNumber = phoneNumber, PathwayId = pathwayId });
         if (!response.IsSuccessStatusCode)
         {
             _logger.LogError("Failed to queue a call with the BlandAI API with the code {Code} and reponse {Response}.",
@@ -33,7 +32,8 @@ public class BlandApiService : IBlandApiService
         {
             var successfulQueueCallResponse = await response.Content.ReadFromJsonAsync<SuccessfulQueueCallResponse>();
 
-            _logger.LogInformation("Call was successfully queued with call id of {CallId}.", successfulQueueCallResponse!.CallId);
+            _logger.LogInformation("Call was successfully queued with call id of {CallId} and pathway id {PathwayId}.",
+                successfulQueueCallResponse!.CallId, pathwayId);
             return successfulQueueCallResponse.CallId;
         }
         catch (JsonException)
