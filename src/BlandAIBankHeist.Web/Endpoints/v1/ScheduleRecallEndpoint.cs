@@ -33,7 +33,8 @@ public static class ScheduleRecallEndpoint
 
             try
             {
-                var newCallId = await blandApiService.TryToQueueCallAsync(callDetails.ToPhoneNumber, apiOptions.CurrentValue.BankHeistJobPathwayId);
+                var newCallId = await blandApiService.TryToQueueCallAsync(callDetails.ToPhoneNumber, apiOptions.CurrentValue.BankHeistJobPathwayId,
+                    apiOptions.CurrentValue.JobVoice);
                 logger.LogInformation("Successfully scheduled recall with call id {CallID}.", callId);
             }
             catch (InvalidOperationException ex)

@@ -32,7 +32,8 @@ public sealed class CallController : Controller
 
         try
         {
-            var callId = await _blandApiService.TryToQueueCallAsync(createCallDto.PhoneNumberToCall, _apiOptions.CurrentValue.BankHeistIntroductionPathwayId);
+            var callId = await _blandApiService.TryToQueueCallAsync(createCallDto.PhoneNumberToCall, _apiOptions.CurrentValue.BankHeistIntroductionPathwayId,
+                _apiOptions.CurrentValue.IntroductionVoice);
             _logger.LogInformation("User created a call with a valid phone number with call ID {CallId}.", callId);
             ViewData.Add("SuccessMessage", "Your call has been added to the queue! Please wait for the call!");
             return View();
