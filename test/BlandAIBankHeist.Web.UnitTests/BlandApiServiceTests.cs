@@ -32,7 +32,7 @@ public sealed class BlandApiServiceTests
 
         // Act
         // Assert
-        await _sut.Invoking(x => x.TryToQueueCallAsync(_expectedPhoneNumber))
+        await _sut.Invoking(x => x.TryToQueueCallAsync(_expectedPhoneNumber, _fakePathwayId))
             .Should().ThrowAsync<InvalidOperationException>()
             .WithMessage("Failed to queue call with the BlandAI API.");
     }
@@ -46,7 +46,7 @@ public sealed class BlandApiServiceTests
 
         // Act
         // Assert
-        await _sut.Invoking(x => x.TryToQueueCallAsync(_expectedPhoneNumber))
+        await _sut.Invoking(x => x.TryToQueueCallAsync(_expectedPhoneNumber, _fakePathwayId))
             .Should().ThrowAsync<InvalidOperationException>()
             .WithMessage("Failed to parse response from BlandAI API.");
     }
@@ -61,14 +61,14 @@ public sealed class BlandApiServiceTests
             .Respond("application/json", $"{{\"status\": \"success\", \"call_id\": \"{expectedCallId}\"}}");
 
         // Act
-        var callId = await _sut.TryToQueueCallAsync(_expectedPhoneNumber);
+        var callId = await _sut.TryToQueueCallAsync(_expectedPhoneNumber, _fakePathwayId);
 
         // Assert
         callId.Should().Be(expectedCallId);
     }
 
     [Fact]
-    public async Task TryToQueueCallAsync_UsesExpectedPhoneNumber_WhenUsingBlandAPI()
+    public async Task TryToQueueCallAsync_UsesExpectedPhoneNumberAndPathwayId_WhenUsingBlandAPI()
     {
         // Arrange
         _httpMessageHandler.Expect(_fakeCallUrl)
@@ -76,7 +76,7 @@ public sealed class BlandApiServiceTests
             .Respond("application/json", $"{{\"status\": \"success\", \"call_id\": \"\"}}");
 
         // Act
-        await _sut.TryToQueueCallAsync(_expectedPhoneNumber);
+        await _sut.TryToQueueCallAsync(_expectedPhoneNumber, _fakePathwayId);
 
         // Assert
         _httpMessageHandler.VerifyNoOutstandingExpectation();
@@ -91,7 +91,7 @@ public sealed class BlandApiServiceTests
             .Respond("application/json", $"{{\"status\": \"success\", \"call_id\": \"\"}}");
 
         // Act
-        await _sut.TryToQueueCallAsync(_expectedPhoneNumber);
+        await _sut.TryToQueueCallAsync(_expectedPhoneNumber, _fakePathwayId);
 
         // Assert
         _httpMessageHandler.VerifyNoOutstandingExpectation();
@@ -185,7 +185,7 @@ public sealed class BlandApiServiceTests
     private const string _fakeCallId = nameof(_fakeCallId);
     private const string _expectedPhoneNumber = nameof(_expectedPhoneNumber);
 
-    private readonly BlandApiOptions _fakeBlandApiOptions = new() { ApiUrl = _fakeApiUrl, ApiKey = "FakeApiKey", BankHeistPathwayId = _fakePathwayId };
+    private readonly BlandApiOptions _fakeBlandApiOptions = new() { ApiUrl = _fakeApiUrl, ApiKey = "FakeApiKey", BankHeistIntroductionPathwayId = _fakePathwayId };
     private readonly string _fakeCallUrl = $"{_fakeApiUrl}/v1/calls";
     private readonly string _fakeCallDetailsUrl = $"{_fakeApiUrl}/v1/calls/{_fakeCallId}";
 }
