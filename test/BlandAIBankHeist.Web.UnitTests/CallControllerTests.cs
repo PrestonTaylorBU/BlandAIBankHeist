@@ -96,7 +96,8 @@ public sealed class CallControllerTests
 
     private const string _fakePathwayId = nameof(_fakePathwayId);
 
-    private readonly BlandApiOptions _fakeBlandApiOptions = new() { ApiUrl = "", ApiKey = "", BankHeistIntroductionPathwayId = _fakePathwayId };
+    private readonly BlandApiOptions _fakeBlandApiOptions = new() { ApiUrl = "", ApiKey = "", BankHeistIntroductionPathwayId = _fakePathwayId,
+        BankHeistJobPathwayId = "", RecallDelayInSeconds = 0 };
     private readonly IOptionsMonitor<BlandApiOptions> _apiOptionsMonitor = Substitute.For<IOptionsMonitor<BlandApiOptions>>();
     private readonly IBlandApiService _blandApiService = Substitute.For<IBlandApiService>();
 }

@@ -185,7 +185,8 @@ public sealed class BlandApiServiceTests
     private const string _fakeCallId = nameof(_fakeCallId);
     private const string _expectedPhoneNumber = nameof(_expectedPhoneNumber);
 
-    private readonly BlandApiOptions _fakeBlandApiOptions = new() { ApiUrl = _fakeApiUrl, ApiKey = "FakeApiKey", BankHeistIntroductionPathwayId = _fakePathwayId };
+    private readonly BlandApiOptions _fakeBlandApiOptions = new() { ApiUrl = _fakeApiUrl, ApiKey = "FakeApiKey", BankHeistIntroductionPathwayId = _fakePathwayId,
+        BankHeistJobPathwayId = "", RecallDelayInSeconds = 0 };
     private readonly string _fakeCallUrl = $"{_fakeApiUrl}/v1/calls";
     private readonly string _fakeCallDetailsUrl = $"{_fakeApiUrl}/v1/calls/{_fakeCallId}";
 }
