@@ -45,6 +45,33 @@ public class BlandApiService : IBlandApiService
         }
     }
 
+    public async Task<CallDetailsModel?> GetCallDetailsAsync(string callId)
+    {
+        var client = CreateAuthorizedHttpClientForBlandApi();
+
+        var response = await client.GetAsync($"/v1/calls/{callId}");
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogError("Failed to get call details from BlandAPI with call id {CallID}.", callId);
+            return null;
+        }
+
+        try
+        {
+            var callDetails = await response.Content.ReadFromJsonAsync<CallDetailsModel>();
+
+            _logger.LogInformation("Successfully got call details from BlandAPI with call id {CallID}.", callId);
+            return callDetails;
+        }
+        catch (JsonException)
+        {
+            _logger.LogError("Successful status code from BlandAI API, however, an invalid response of {Response} was returned.",
+                await response.Content.ReadAsStringAsync());
+
+            return null;
+        }
+    }
+
     private HttpClient CreateAuthorizedHttpClientForBlandApi()
     {
         var client = _httpClientFactory.CreateClient();
