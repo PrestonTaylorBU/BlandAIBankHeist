@@ -9,4 +9,7 @@ public sealed class QueueCallModel
 
     [JsonPropertyName("pathway_id")]
     public required string PathwayId { get; init; }
+
+    [JsonPropertyName("voice")]
+    public required string Voice { get; init; }
 }

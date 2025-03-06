@@ -69,7 +69,7 @@ public sealed class CallControllerTests
         // Assert
         await _blandApiService
             .Received(1)
-            .TryToQueueCallAsync(expectedPhoneNumber, _fakePathwayId);
+            .TryToQueueCallAsync(expectedPhoneNumber, _fakePathwayId, _fakeVoice);
     }
 
 
@@ -79,7 +79,7 @@ public sealed class CallControllerTests
         // Arrange
         var dummyDto = new CreateCallDTO("valid");
 
-        _blandApiService.TryToQueueCallAsync(Arg.Any<string>(), Arg.Any<string>())
+        _blandApiService.TryToQueueCallAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>())
             .Throws<InvalidOperationException>();
 
         // Act
@@ -95,9 +95,10 @@ public sealed class CallControllerTests
     private readonly CallController _sut;
 
     private const string _fakePathwayId = nameof(_fakePathwayId);
+    private const string _fakeVoice = nameof(_fakeVoice);
 
     private readonly BlandApiOptions _fakeBlandApiOptions = new() { ApiUrl = "", ApiKey = "", BankHeistIntroductionPathwayId = _fakePathwayId,
-        BankHeistJobPathwayId = "", RecallDelayInSeconds = 0 };
+        BankHeistJobPathwayId = "", RecallDelayInSeconds = 0, IntroductionVoice = _fakeVoice, JobVoice = _fakeVoice };
     private readonly IOptionsMonitor<BlandApiOptions> _apiOptionsMonitor = Substitute.For<IOptionsMonitor<BlandApiOptions>>();
     private readonly IBlandApiService _blandApiService = Substitute.For<IBlandApiService>();
 }
