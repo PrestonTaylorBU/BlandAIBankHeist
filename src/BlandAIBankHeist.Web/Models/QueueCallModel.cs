@@ -12,4 +12,8 @@ public sealed class QueueCallModel
 
     [JsonPropertyName("voice")]
     public required string Voice { get; init; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    [JsonPropertyName("background_track")]
+    public string? BackgroundTrack { get; init; }
 }

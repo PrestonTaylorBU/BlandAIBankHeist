@@ -15,11 +15,12 @@ public class BlandApiService : IBlandApiService
         _httpClientFactory = httpClientFactory;
     }
 
-    public async Task<string> TryToQueueCallAsync(string phoneNumber, string pathwayId, string voice)
+    public async Task<string> TryToQueueCallAsync(string phoneNumber, string pathwayId, string voice, string? backgroundTrack = null)
     {
         var client = CreateAuthorizedHttpClientForBlandApi();
 
-        var response = await client.PostAsJsonAsync("/v1/calls", new QueueCallModel { PhoneNumber = phoneNumber, PathwayId = pathwayId, Voice = voice });
+        var response = await client.PostAsJsonAsync("/v1/calls", new QueueCallModel { PhoneNumber = phoneNumber, PathwayId = pathwayId, Voice = voice,
+            BackgroundTrack = backgroundTrack });
         if (!response.IsSuccessStatusCode)
         {
             _logger.LogError("Failed to queue a call with the BlandAI API with the code {Code} and reponse {Response}.",
