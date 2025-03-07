@@ -3,7 +3,7 @@
     ViewData["Title"] = "Bank Heist Game";
 }
 
-<section class="text-center">
+<section class="container text-center">
     <h1>Start your Bank Heist call session!</h1>
 
     <form asp-action="Index">
@@ -15,16 +15,17 @@
             <input type="submit" value="Call" class="btn btn-outline-primary rounded-end" />
         </div>
 
-        <span asp-validation-for="PhoneNumberToCall" class="text-danger"></span>
-
-        @if (ViewData.ContainsKey("SuccessMessage"))
-        {
-            <span class="text-success">@ViewData["SuccessMessage"]</span>
-        }
-
-        @if (ViewData.ContainsKey("ErrorMessage"))
-        {
-            <span class="text-danger">@ViewData["ErrorMessage"]</span>
-        }
     </form>
+
+    <span asp-validation-for="PhoneNumberToCall" class="text-danger"></span>
+
+    @if (ViewData.ContainsKey("SuccessMessage"))
+    {
+        <span class="text-success">@ViewData["SuccessMessage"]</span>
+    }
+
+    @if (ViewData.ContainsKey("ErrorMessage"))
+    {
+        <span class="text-danger">@ViewData["ErrorMessage"]</span>
+    }
 </section>
